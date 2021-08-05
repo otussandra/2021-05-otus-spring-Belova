@@ -5,71 +5,81 @@ import ru.otus.spring.dao.QuestionnaireDao;
 import ru.otus.spring.domain.Questionnaire;
 import ru.otus.spring.domain.QuestionnairePart;
 import ru.otus.spring.domain.Respondent;
-
+import ru.otus.spring.api.IOService;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 @Service
 public class QuestionnaireServiceImpl implements QuestionnaireService{
-    private QuestionnaireDao dao;
+    private final QuestionnaireDao dao;
+    private final IOService ioService;
 
-    public QuestionnaireServiceImpl(QuestionnaireDao dao) {
+    public QuestionnaireServiceImpl(QuestionnaireDao dao, IOService ioService) {
                this.dao = dao;
-          }
+               this.ioService = ioService;
+    }
     @Override
-    public void StartQuestionnaire() {
+    public void startQuestionnaire() {
         Questionnaire questionnaire = dao.LoadQuestionnaire();
         int rightAnswerCounter;
-        if(questionnaire != null) {
-            Scanner in = new Scanner(System.in);
-            System.out.println("Start Questionnaire"+"\n");
-            System.out.println("Please enter your Last name"+"\n");
-            String lastName  = in.nextLine();
-            System.out.println("Please enter your First name"+"\n");
-            String firstName =  in.nextLine();
+        Respondent respondent  = questionnaiRerespondentIntroduce();
+        rightAnswerCounter = executeQuestionnaire(questionnaire);
+        if(respondent != null){
+            respondent.seyNumberOfRightAnswer(rightAnswerCounter);
+            String questionnaireResult = questionnaire.getQuestionnaireResult(respondent);
+            ioService.out("Questionnaire result" +  "\n" + questionnaireResult);
+        }
+    }
+    public int executeQuestionnaire(Questionnaire qest){
+        int rightAnswerCounter;
+        if(qest != null) {
+            ioService.out("Start Questionnaire" + "\n");
             int youAnswerNumber = 0;
-            if(lastName.length()>0 && firstName.length()>0){
-                Respondent respondent = new Respondent(lastName,firstName);
-                rightAnswerCounter =0;
-                for (int i = 0; i < questionnaire.getQuestions().size(); i++) {
-                    QuestionnairePart element = questionnaire.getQuestions().get(i);
-                    System.out.println(element.getQuestionText()+"\n");
-                    List<String> answers = element.getQuestionAnswers();
-                    String answerString = "";
-                    for (int j = 0; j < answers.size(); j++) {
+            rightAnswerCounter = 0;
+
+            for (int i = 0; i < qest.getQuestions().size(); i++) {
+                QuestionnairePart element = qest.getQuestions().get(i);
+                ioService.out(element.getQuestionText() + "\n");
+                List<String> answers = element.getQuestionAnswers();
+                String answerString = "";
+                for (int j = 0; j < answers.size(); j++) {
                     answerString = answerString + Integer.toString(j + 1) + ")" + " " + answers.get(j) + " ";
-
-                    }
-                    System.out.println(answerString + "\n");
-
-                    System.out.print("press 1 or 2" + "\n");
-                    try {
-                        youAnswerNumber = in.nextInt();
-                        if(youAnswerNumber != 1 || youAnswerNumber !=2){
-                            while(youAnswerNumber != 1 && youAnswerNumber !=2){
-                                System.out.print("press 1 or 2" + "\n");
-                                youAnswerNumber = in.nextInt();
-                            }
-                        }
-                    }catch (InputMismatchException inputMismatchException){
-                        System.out.print("You need to press 1 or 2" + "\n" + "Start the questionnaire from the beginning");
-                        return;
-                    }
-
-                    System.out.println("your answer is: " + youAnswerNumber + "\n");
-                    System.out.println("The right answer is: " + element.getRightAnswer() + "\n");
-                    if(element.getRightAnswer().equals(element.getQuestionAnswers().get((youAnswerNumber-1)))){
-                        rightAnswerCounter++;
-                    }
                 }
-                respondent.seyNumberOfRightAnswer(rightAnswerCounter);
-                String questionnaireResult = questionnaire.getQuestionnaireResult(respondent);
-                System.out.println("Questionnaire result" +  "\n" + questionnaireResult);
-            }else{
-                System.out.println("You didn't introduce yourself"+ "\n");
-                return;
+                ioService.out(answerString + "\n");
+                ioService.out("press 1 or 2" + "\n");
+                try {
+                    youAnswerNumber = ioService.readInteger();
+                    if (youAnswerNumber != 1 || youAnswerNumber != 2) {
+                        while (youAnswerNumber != 1 && youAnswerNumber != 2) {
+                            ioService.out("press 1 or 2" + "\n");
+                            youAnswerNumber = ioService.readInteger();
+                        }
+                    }
+                } catch (InputMismatchException inputMismatchException) {
+                    ioService.out("You need to press 1 or 2" + "\n" + "Start the questionnaire from the beginning");
+                    return 0;
+                }
+                ioService.out("your answer is: " + youAnswerNumber + "\n");
+                ioService.out("The right answer is: " + element.getRightAnswer() + "\n");
+                if (element.getRightAnswer().equals(element.getQuestionAnswers().get((youAnswerNumber - 1)))) {
+                    rightAnswerCounter++;
+                }
             }
-
+            return rightAnswerCounter;
+        }else {
+            return 0;
+        }
+    }
+    public Respondent questionnaiRerespondentIntroduce(){
+        ioService.out("Please enter your Last name"+"\n");
+        String lastName  = ioService.readString();
+        ioService.out("Please enter your First name"+"\n");
+        String firstName =  ioService.readString();
+        if(lastName.length()>0 && firstName.length()>0) {
+            return new Respondent(lastName, firstName);
+        }else{
+            ioService.out("You didn't introduce yourself"+ "\n");
+            return null;
         }
     }
 }

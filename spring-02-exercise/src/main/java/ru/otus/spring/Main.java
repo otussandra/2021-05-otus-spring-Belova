@@ -17,6 +17,6 @@ public class Main {
 
         QuestionnaireService service = ctx.getBean(QuestionnaireService.class);
 
-        service.StartQuestionnaire();
+        service.startQuestionnaire();
     }
 }

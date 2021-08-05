@@ -40,7 +40,7 @@ public class QuestionnaireDaoCSV implements QuestionnaireDao {
                 try {
                     line = br.readLine();
                     if(line != null ) {
-                        questionnaire.add(CreateQuestionnairePart(line));
+                        questionnaire.add(createQuestionnairePart(line));
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -53,24 +53,24 @@ public class QuestionnaireDaoCSV implements QuestionnaireDao {
         }
         return new Questionnaire(questionnaire,passingScore);
     }
-    QuestionnairePart CreateQuestionnairePart(String soursLine){
+    QuestionnairePart createQuestionnairePart(String soursLine){
         String question = null;
         String rightAnswer = null;
         List<String> answers = null;
-        if(FindByKeyInString("Answer",soursLine,delimiter).size()>0) {
-            answers = FindByKeyInString("Answer", soursLine, delimiter);
+        if(findByKeyInString("Answer",soursLine,delimiter).size()>0) {
+            answers = findByKeyInString("Answer", soursLine, delimiter);
         }
-        if(FindByKeyInString("Question",soursLine,delimiter).size()>0) {
-            question = FindByKeyInString("Question", soursLine, delimiter).get(0);
+        if(findByKeyInString("Question",soursLine,delimiter).size()>0) {
+            question = findByKeyInString("Question", soursLine, delimiter).get(0);
         }
-        if(FindByKeyInString("RightAnswer",soursLine,delimiter).size()>0) {
-            rightAnswer = FindByKeyInString("RightAnswer", soursLine, delimiter).get(0);
+        if(findByKeyInString("RightAnswer",soursLine,delimiter).size()>0) {
+            rightAnswer = findByKeyInString("RightAnswer", soursLine, delimiter).get(0);
         }
 
         return new QuestionnairePart(question,answers,rightAnswer);
     }
 
-    List<String> FindByKeyInString(String key,String soursLine,Character delimiter){
+    List<String> findByKeyInString(String key,String soursLine,Character delimiter){
         String[] pair = new String[0];
         if(soursLine != null) {
             pair = soursLine.split(String.valueOf(delimiter));

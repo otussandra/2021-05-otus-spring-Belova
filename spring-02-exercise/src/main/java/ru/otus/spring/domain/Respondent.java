@@ -1,12 +1,12 @@
 package ru.otus.spring.domain;
 
-import org.springframework.beans.factory.annotation.Value;
+import ru.otus.spring.api.IOService;
 
 public class Respondent {
     private final String lastName;
     private final String firstName;
     private  int numberOfRightAnswer;
-    public Respondent( String lastName, String firstName) {
+    public Respondent(String lastName, String firstName) {
         this.lastName = lastName;
         this.firstName = firstName;
         this.numberOfRightAnswer = 0;
@@ -26,4 +26,5 @@ public class Respondent {
 
         this.numberOfRightAnswer = numberOfRightAnswer ;
     }
+
 }
