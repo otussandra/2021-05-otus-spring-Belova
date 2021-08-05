@@ -30,7 +30,7 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
         rightAnswerCounter = executeQuestionnaire(questionnaire);
         if (respondent != null) {
             respondent.seyNumberOfRightAnswer(rightAnswerCounter);
-            String questionnaireResult = questionnaire.getQuestionnaireResult(respondent);
+            String questionnaireResult = getQuestionnaireResult(respondent,questionnaire);
             ioService.out("Questionnaire result" + "\n" + questionnaireResult);
         }
     }
@@ -92,5 +92,17 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
 
         }
         return null;
+    }
+    public String getQuestionnaireResult(Respondent respondent,Questionnaire qest){
+        if (respondent.getNumberOfRightAnswer() < qest.getPassingScore()){
+            return "The number of correct answers is " + Integer.toString(respondent.getNumberOfRightAnswer())
+                    + ". The passing score is " + Integer.toString( qest.getPassingScore()) + ". You didn't pass the test.";
+        }
+        if (respondent.getNumberOfRightAnswer() >=  qest.getPassingScore()){
+            return "The number of correct answers is " + Integer.toString(respondent.getNumberOfRightAnswer())
+                    + ". The passing score is " + Integer.toString( qest.getPassingScore()) + ". " +
+                    respondent.getLastName() + respondent.getFirstName() + ", you have passed the test.";
+        }
+        return "";
     }
 }

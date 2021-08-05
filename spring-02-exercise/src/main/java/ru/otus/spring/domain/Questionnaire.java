@@ -16,16 +16,8 @@ public class Questionnaire {
     public List<QuestionnairePart> getQuestions() {
         return questions;
     }
-    public String getQuestionnaireResult(Respondent respondent){
-        if (respondent.getNumberOfRightAnswer() < this.passingScore){
-            return "The number of correct answers is " + Integer.toString(respondent.getNumberOfRightAnswer())
-                    + ". The passing score is " + Integer.toString(this.passingScore) + ". You didn't pass the test.";
-        }
-        if (respondent.getNumberOfRightAnswer() >= this.passingScore){
-            return "The number of correct answers is " + Integer.toString(respondent.getNumberOfRightAnswer())
-                    + ". The passing score is " + Integer.toString(this.passingScore) + ". " +
-                    respondent.getLastName() + respondent.getFirstName() + ", you have passed the test.";
-        }
-        return "";
+
+    public int getPassingScore() {
+        return passingScore;
     }
 }
