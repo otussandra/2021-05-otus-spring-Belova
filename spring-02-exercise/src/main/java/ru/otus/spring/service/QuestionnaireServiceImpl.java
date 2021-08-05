@@ -6,33 +6,38 @@ import ru.otus.spring.domain.Questionnaire;
 import ru.otus.spring.domain.QuestionnairePart;
 import ru.otus.spring.domain.Respondent;
 import ru.otus.spring.api.IOService;
+
+import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
+
 @Service
-public class QuestionnaireServiceImpl implements QuestionnaireService{
+public class QuestionnaireServiceImpl implements QuestionnaireService {
     private final QuestionnaireDao dao;
     private final IOService ioService;
 
     public QuestionnaireServiceImpl(QuestionnaireDao dao, IOService ioService) {
-               this.dao = dao;
-               this.ioService = ioService;
+        this.dao = dao;
+        this.ioService = ioService;
     }
+
     @Override
-    public void startQuestionnaire() {
+    public void startQuestionnaire() throws IOException {
         Questionnaire questionnaire = dao.LoadQuestionnaire();
         int rightAnswerCounter;
-        Respondent respondent  = questionnaiRerespondentIntroduce();
+        Respondent respondent = questionnaiRerespondentIntroduce();
         rightAnswerCounter = executeQuestionnaire(questionnaire);
-        if(respondent != null){
+        if (respondent != null) {
             respondent.seyNumberOfRightAnswer(rightAnswerCounter);
             String questionnaireResult = questionnaire.getQuestionnaireResult(respondent);
-            ioService.out("Questionnaire result" +  "\n" + questionnaireResult);
+            ioService.out("Questionnaire result" + "\n" + questionnaireResult);
         }
     }
-    public int executeQuestionnaire(Questionnaire qest){
+
+    public int executeQuestionnaire(Questionnaire qest) {
         int rightAnswerCounter;
-        if(qest != null) {
+        if (qest != null) {
             ioService.out("Start Questionnaire" + "\n");
             int youAnswerNumber = 0;
             rightAnswerCounter = 0;
@@ -66,20 +71,26 @@ public class QuestionnaireServiceImpl implements QuestionnaireService{
                 }
             }
             return rightAnswerCounter;
-        }else {
+        } else {
             return 0;
         }
     }
-    public Respondent questionnaiRerespondentIntroduce(){
-        ioService.out("Please enter your Last name"+"\n");
-        String lastName  = ioService.readString();
-        ioService.out("Please enter your First name"+"\n");
-        String firstName =  ioService.readString();
-        if(lastName.length()>0 && firstName.length()>0) {
-            return new Respondent(lastName, firstName);
-        }else{
-            ioService.out("You didn't introduce yourself"+ "\n");
-            return null;
+
+    public Respondent questionnaiRerespondentIntroduce() {
+        try {
+            ioService.out("Please enter your Last name" + "\n");
+            String lastName = ioService.readString();
+            ioService.out("Please enter your First name" + "\n");
+            String firstName = ioService.readString();
+            if (lastName.length() > 0 && firstName.length() > 0) {
+                return new Respondent(lastName, firstName);
+            } else {
+                ioService.out("You didn't introduce yourself" + "\n");
+                return null;
+            }
+        } catch (InputMismatchException inputMismatchException) {
+
         }
+        return null;
     }
 }

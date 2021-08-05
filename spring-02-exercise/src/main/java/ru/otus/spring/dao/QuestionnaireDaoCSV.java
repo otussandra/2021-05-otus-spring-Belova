@@ -13,28 +13,22 @@ import java.util.ArrayList;
 import java.util.List;
 @Service
 public class QuestionnaireDaoCSV implements QuestionnaireDao {
-    private String questionnaireSours;
-    private char delimiter;
+    private final String questionnaireSours;
+    private final char delimiter;
     private final int passingScore;
     public QuestionnaireDaoCSV(@Value("${questionnaireSours}") String questionnaireSours,@Value("${delimiter}") char delimiter,@Value("${passingScore}") int passingScore) {
         this.questionnaireSours = questionnaireSours;
         this.delimiter = delimiter;
         this.passingScore = passingScore;
     }
-    public void setQuestionnaireSours(String questionnaireSours) {
-        this.questionnaireSours = questionnaireSours;
-    }
-    public void setDelimiter(char delimiter) {
-        this.delimiter = delimiter;
-    }
+
 
     @Override
-    public Questionnaire LoadQuestionnaire() {
-        List<QuestionnairePart> questionnaire = new ArrayList();
-         try {
-
-             InputStream is = QuestionnaireDaoCSV.class.getResourceAsStream(questionnaireSours);
-             BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"));
+    public Questionnaire LoadQuestionnaire() throws IOException{
+        List<QuestionnairePart> questionnaire = new ArrayList<>();
+        InputStream is = QuestionnaireDaoCSV.class.getResourceAsStream(questionnaireSours);
+        BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"));
+        try {
              while (true) {
                 String line = null;
                 try {
@@ -48,12 +42,12 @@ public class QuestionnaireDaoCSV implements QuestionnaireDao {
                 if (line == null)
                     break;
             }
-        } catch (IOException ex) {
-            ex.printStackTrace();
+        } finally {
+            br.close();
         }
         return new Questionnaire(questionnaire,passingScore);
     }
-    QuestionnairePart createQuestionnairePart(String soursLine){
+    private QuestionnairePart createQuestionnairePart(String soursLine){
         String question = null;
         String rightAnswer = null;
         List<String> answers = null;

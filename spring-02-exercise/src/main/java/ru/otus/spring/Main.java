@@ -9,9 +9,9 @@ import ru.otus.spring.service.QuestionnaireService;
 import java.io.*;
 @Configuration
 @ComponentScan
-@PropertySource("classpath:properties")
+@PropertySource("application.properties")
 public class Main {
-    public static void main(String[] args) throws UnsupportedEncodingException {
+    public static void main(String[] args) throws IOException {
         AnnotationConfigApplicationContext ctx =
                 new AnnotationConfigApplicationContext(Main.class);
 
