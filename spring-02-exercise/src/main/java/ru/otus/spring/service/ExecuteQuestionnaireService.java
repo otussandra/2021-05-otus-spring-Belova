@@ -1,12 +1,13 @@
 package ru.otus.spring.service;
 
+import org.springframework.stereotype.Service;
 import ru.otus.spring.api.IOService;
 import ru.otus.spring.domain.Questionnaire;
 import ru.otus.spring.domain.QuestionnairePart;
 
 import java.util.InputMismatchException;
 import java.util.List;
-
+@Service
 public class ExecuteQuestionnaireService {
     private final IOService ioService;
 

@@ -1,7 +1,9 @@
 package ru.otus.spring.service;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Service;
+import ru.otus.spring.Main;
 import ru.otus.spring.dao.QuestionnaireDao;
 import ru.otus.spring.domain.Questionnaire;
 import ru.otus.spring.domain.QuestionnairePart;
@@ -26,24 +28,21 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     }
 
     @Override
-    public void startQuestionnaire() throws IOException {
+    public void startQuestionnaire() {
+        AnnotationConfigApplicationContext ctx =
+                new AnnotationConfigApplicationContext(Main.class);
+        QuestionnarierRerespondentIntroduceService qris = ctx.getBean(QuestionnarierRerespondentIntroduceService.class);
+        ExecuteQuestionnaireService eqs = ctx.getBean(ExecuteQuestionnaireService.class);
+        QuestionnaireResultService qrs = ctx.getBean(QuestionnaireResultService.class);
         Questionnaire questionnaire = dao.loadQuestionnaire();
         int rightAnswerCounter;
-        QuestionnarierRerespondentIntroduceService qris = new QuestionnarierRerespondentIntroduceService( this.ioService);
         Respondent respondent = qris.questionnarierRerespondentIntroduce();
-        ExecuteQuestionnaireService eqs = new ExecuteQuestionnaireService(this.ioService);
-        QuestionnaireResultService qrs =  new QuestionnaireResultService(this.ioService);
         rightAnswerCounter = eqs.executeQuestionnaire(questionnaire);
         if (respondent != null) {
             respondent.seyNumberOfRightAnswer(rightAnswerCounter);
-            qrs.showQuestionnaireResult(respondent,questionnaire,this.getPassingScore());
+            qrs.showQuestionnaireResult(respondent, questionnaire, passingScore);
         }
     }
-    public int getPassingScore() {
-        return passingScore;
-    }
-
-
 
 
 }

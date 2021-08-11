@@ -3,6 +3,7 @@ package ru.otus.spring.dao;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import ru.otus.spring.api.IOService;
+import ru.otus.spring.api.QuestionnaireLoadingException;
 import ru.otus.spring.domain.Questionnaire;
 import ru.otus.spring.domain.QuestionnairePart;
 
@@ -13,23 +14,20 @@ import java.util.List;
 
 @Service
 public class QuestionnaireDaoCSV implements QuestionnaireDao {
-    private final String questionnaireSours;
+    private final String questionnaireSource;
     private final char delimiter;
 
-    private final IOService ioService;
-
-    public QuestionnaireDaoCSV(@Value("${questionnaireSours}") String questionnaireSours,
-                               @Value("${delimiter}") char delimiter, IOService ioService) {
-        this.questionnaireSours = questionnaireSours;
+    public QuestionnaireDaoCSV(@Value("${questionnaireSours}") String questionnaireSource,
+                               @Value("${delimiter}") char delimiter) {
+        this.questionnaireSource = questionnaireSource;
         this.delimiter = delimiter;
-        this.ioService = ioService;
     }
 
 
     @Override
-    public Questionnaire loadQuestionnaire() {
+    public Questionnaire loadQuestionnaire() throws QuestionnaireLoadingException {
         List<QuestionnairePart> questionnaire = new ArrayList<>();
-        try (InputStream is = QuestionnaireDaoCSV.class.getResourceAsStream(questionnaireSours);
+        try (InputStream is = QuestionnaireDaoCSV.class.getResourceAsStream(questionnaireSource);
              BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));) {
             while (true) {
                 String line = null;
@@ -41,11 +39,9 @@ public class QuestionnaireDaoCSV implements QuestionnaireDao {
                     break;
             }
         } catch (FileNotFoundException e) {
-            ioService.out("Questionnaire sours " + questionnaireSours + " not found.");
-            e.printStackTrace();
+            throw new QuestionnaireLoadingException("Questionnaire sours " + questionnaireSource + " not found.",e);
         } catch (IOException e) {
-            ioService.out("Questionnaire sours file " + questionnaireSours + " read error.");
-            e.printStackTrace();
+            throw new QuestionnaireLoadingException("Questionnaire sours file " + questionnaireSource + " read error.", e);
         }
         return new Questionnaire(questionnaire);
     }
@@ -72,7 +68,7 @@ public class QuestionnaireDaoCSV implements QuestionnaireDao {
         if (soursLine != null) {
             pair = soursLine.split(String.valueOf(delimiter));
         }
-        List<String> result = new ArrayList();
+        List<String> result = new ArrayList<>();
         for (int i = 0; i < pair.length; i++) {
             if (pair[i].startsWith(key)) {
                 result.add(pair[i].substring(key.length() + 1));
