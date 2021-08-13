@@ -7,19 +7,21 @@ public class QuestionnairePart {
     private final List<String> questionAnswers;
     private final String rightAnswer;
 
-    public QuestionnairePart(String questionText, List<String> questionAnswers, String rightAnswer){
+    public QuestionnairePart(String questionText, List<String> questionAnswers, String rightAnswer) {
         this.questionText = questionText;
         this.rightAnswer = rightAnswer;
         this.questionAnswers = questionAnswers;
     }
 
-    public String getQuestionText(){
+    public String getQuestionText() {
         return questionText;
     }
-    public String getRightAnswer(){
+
+    public String getRightAnswer() {
         return rightAnswer;
     }
-    public List<String> getQuestionAnswers(){
+
+    public List<String> getQuestionAnswers() {
         return questionAnswers;
     }
 

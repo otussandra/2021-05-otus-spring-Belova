@@ -38,10 +38,8 @@ public class QuestionnaireDaoCSV implements QuestionnaireDao {
                 if (line == null)
                     break;
             }
-        } catch (FileNotFoundException e) {
-            throw new QuestionnaireLoadingException("Questionnaire sours " + questionnaireSource + " not found.",e);
         } catch (IOException e) {
-            throw new QuestionnaireLoadingException("Questionnaire sours file " + questionnaireSource + " read error.", e);
+            throw new QuestionnaireLoadingException("Questionnaire sours " + questionnaireSource + " not found.", e);
         }
         return new Questionnaire(questionnaire);
     }

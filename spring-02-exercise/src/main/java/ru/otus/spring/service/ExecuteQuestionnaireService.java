@@ -7,6 +7,7 @@ import ru.otus.spring.domain.QuestionnairePart;
 
 import java.util.InputMismatchException;
 import java.util.List;
+
 @Service
 public class ExecuteQuestionnaireService {
     private final IOService ioService;
@@ -36,9 +37,9 @@ public class ExecuteQuestionnaireService {
 
     private void showAnswerList(QuestionnairePart element) {
         List<String> answers = element.getQuestionAnswers();
-        String answerString = "";
+        StringBuilder answerString = new StringBuilder();
         for (int j = 0; j < answers.size(); j++) {
-            answerString = answerString + Integer.toString(j + 1) + ")" + " " + answers.get(j) + " ";
+            answerString.append(j + 1).append(")").append(" ").append(answers.get(j)).append(" ");
         }
         ioService.out(answerString + "\n");
     }
@@ -48,11 +49,9 @@ public class ExecuteQuestionnaireService {
         ioService.out("press 1 or 2" + "\n");
         try {
             youAnswerNumber = ioService.readInteger();
-            if (youAnswerNumber != 1 || youAnswerNumber != 2) {
-                while (youAnswerNumber != 1 && youAnswerNumber != 2) {
-                    ioService.out("press 1 or 2" + "\n");
-                    youAnswerNumber = ioService.readInteger();
-                }
+            while (youAnswerNumber != 1 && youAnswerNumber != 2) {
+                ioService.out("press 1 or 2" + "\n");
+                youAnswerNumber = ioService.readInteger();
             }
         } catch (InputMismatchException inputMismatchException) {
             ioService.out("You need to press 1 or 2" + "\n" + "Start the questionnaire from the beginning");

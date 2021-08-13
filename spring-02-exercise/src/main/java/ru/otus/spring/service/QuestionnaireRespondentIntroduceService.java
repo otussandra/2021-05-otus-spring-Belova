@@ -2,18 +2,22 @@ package ru.otus.spring.service;
 
 import org.springframework.stereotype.Service;
 import ru.otus.spring.api.IOService;
+import ru.otus.spring.api.QuestionnaireLoadingException;
+import ru.otus.spring.api.RespondentIntroduceException;
 import ru.otus.spring.domain.Respondent;
 
 import java.util.InputMismatchException;
+import java.util.Objects;
+
 @Service
-public class QuestionnarierRerespondentIntroduceService {
+public class QuestionnaireRespondentIntroduceService {
     private final IOService ioService;
 
-    public QuestionnarierRerespondentIntroduceService(IOService ioService) {
+    public QuestionnaireRespondentIntroduceService(IOService ioService) {
         this.ioService = ioService;
     }
 
-    public Respondent questionnarierRerespondentIntroduce() {
+    public Respondent questionnaireRespondentIntroduce() throws RespondentIntroduceException {
         try {
             ioService.out("Please enter your Last name" + "\n");
             String lastName = ioService.readString();
@@ -22,12 +26,13 @@ public class QuestionnarierRerespondentIntroduceService {
             if (lastName.length() > 0 && firstName.length() > 0) {
                 return new Respondent(lastName, firstName);
             } else {
-                ioService.out("You didn't introduce yourself" + "\n");
-                return null;
+                throw new RespondentIntroduceException("You didn't introduce yourself." + "\n", null);
             }
-        } catch (InputMismatchException inputMismatchException) {
-            ioService.out("You didn't introduce yourself" + "\n");
+        } catch (InputMismatchException e) {
+            throw new RespondentIntroduceException("You didn't introduce yourself." + "\n", e);
         }
-        return null;
+
     }
+
+
 }
