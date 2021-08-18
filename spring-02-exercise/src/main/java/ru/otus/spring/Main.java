@@ -5,7 +5,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import ru.otus.spring.api.IOService;
-import ru.otus.spring.api.QuestionnaireLoadingException;
 import ru.otus.spring.service.QuestionnaireService;
 
 import java.io.*;
@@ -17,16 +16,9 @@ public class Main {
     public static void main(String[] args) {
         AnnotationConfigApplicationContext ctx =
                 new AnnotationConfigApplicationContext(Main.class);
-
         QuestionnaireService service = ctx.getBean(QuestionnaireService.class);
         IOService ioService = ctx.getBean(IOService.class);
-
-        try {
-            service.startQuestionnaire();
-        } catch (QuestionnaireLoadingException e) {
-            ioService.out("Have a problem with a questionnaire source may be it's not found.");
-
-        }
+        service.startQuestionnaire();
     }
 
 }

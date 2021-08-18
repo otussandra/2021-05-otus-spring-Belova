@@ -18,7 +18,7 @@ public class QuestionnaireRespondentIntroduceServiceTest {
     @BeforeEach
     void setUp() {
 
-        ioService = new Mockito().mock(IOService.class);
+        ioService = Mockito.mock(IOService.class);
         service = new QuestionnaireRespondentIntroduceService(ioService);
     }
 

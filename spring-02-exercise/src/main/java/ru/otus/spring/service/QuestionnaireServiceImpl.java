@@ -6,6 +6,7 @@ import ru.otus.spring.api.QuestionnaireLoadingException;
 import ru.otus.spring.api.RespondentIntroduceException;
 import ru.otus.spring.dao.QuestionnaireDao;
 import ru.otus.spring.domain.Questionnaire;
+import ru.otus.spring.domain.QuestionnaireResult;
 import ru.otus.spring.domain.Respondent;
 import ru.otus.spring.api.IOService;
 
@@ -14,18 +15,20 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     private final QuestionnaireDao dao;
     private final IOService ioService;
     private final int passingScore;
-    private final QuestionnaireRespondentIntroduceService qris;
-    private final ExecuteQuestionnaireService eqs;
-    private final QuestionnaireResultService qrs;
+    private final QuestionnaireRespondentIntroduceService questrespintroduceserv;
+    private final ExecuteQuestionnaireService execquestionnaireserv;
+    private final QuestionnaireResultService questionresultserv;
 
     public QuestionnaireServiceImpl(QuestionnaireDao dao, IOService ioService, @Value("${passingScore}") int passingScore,
-                                    QuestionnaireRespondentIntroduceService qris, ExecuteQuestionnaireService eqs, QuestionnaireResultService qrs) {
+                                    QuestionnaireRespondentIntroduceService questrespintroduceserv,
+                                    ExecuteQuestionnaireService execquestionnaireserv,
+                                    QuestionnaireResultService questionresultserv) {
         this.dao = dao;
         this.ioService = ioService;
         this.passingScore = passingScore;
-        this.qris = qris;
-        this.eqs = eqs;
-        this.qrs = qrs;
+        this.questrespintroduceserv = questrespintroduceserv;
+        this.execquestionnaireserv = execquestionnaireserv;
+        this.questionresultserv = questionresultserv;
     }
 
     @Override
@@ -34,10 +37,9 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
             Questionnaire questionnaire = dao.loadQuestionnaire();
             int rightAnswerCounter;
             try {
-                Respondent respondent = qris.questionnaireRespondentIntroduce();
-                rightAnswerCounter = eqs.executeQuestionnaire(questionnaire);
-                qrs.prepareQuestionnaireResult(respondent, rightAnswerCounter);
-                qrs.showQuestionnaireResult(passingScore);
+                Respondent respondent = questrespintroduceserv.questionnaireRespondentIntroduce();
+                rightAnswerCounter = execquestionnaireserv.executeQuestionnaire(questionnaire);
+                questionresultserv.showQuestionnaireResult(passingScore, new QuestionnaireResult(respondent, rightAnswerCounter));
 
             } catch (RespondentIntroduceException e) {
                 ioService.out("You didn't introduce yourself. Please try from the beginning.");

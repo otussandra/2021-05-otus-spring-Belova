@@ -6,5 +6,5 @@ import java.io.IOException;
 
 public interface QuestionnaireService {
 
-    void startQuestionnaire() throws QuestionnaireLoadingException;
+    void startQuestionnaire() ;
 }

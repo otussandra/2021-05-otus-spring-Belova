@@ -8,18 +8,13 @@ import ru.otus.spring.domain.Respondent;
 @Service
 public class QuestionnaireResultService {
     private final IOService ioService;
-    private QuestionnaireResult questionnaireResult;
 
     public QuestionnaireResultService(IOService ioService) {
         this.ioService = ioService;
 
     }
 
-    public void prepareQuestionnaireResult(Respondent respondent, int numberOfRightAnswer) {
-        questionnaireResult = new QuestionnaireResult(respondent, numberOfRightAnswer);
-    }
-
-    public void showQuestionnaireResult(int passingScore) {
+    public void showQuestionnaireResult(int passingScore,QuestionnaireResult questionnaireResult) {
         String result = "";
         if (questionnaireResult.getNumberOfRightAnswer() < passingScore) {
             result = "The number of correct answers is " + questionnaireResult.getNumberOfRightAnswer()

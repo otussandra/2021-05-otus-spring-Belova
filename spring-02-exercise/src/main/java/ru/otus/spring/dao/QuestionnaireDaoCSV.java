@@ -1,8 +1,7 @@
 package ru.otus.spring.dao;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import ru.otus.spring.api.IOService;
+import org.springframework.stereotype.Repository;
 import ru.otus.spring.api.QuestionnaireLoadingException;
 import ru.otus.spring.domain.Questionnaire;
 import ru.otus.spring.domain.QuestionnairePart;
@@ -12,7 +11,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
+@Repository
 public class QuestionnaireDaoCSV implements QuestionnaireDao {
     private final String questionnaireSource;
     private final char delimiter;
