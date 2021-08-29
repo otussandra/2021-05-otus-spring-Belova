@@ -11,9 +11,9 @@ public class Spring03ExerciseApplication {
 
 	public static void main(String[] args) {
 		ApplicationContext ctx =SpringApplication.run(Spring03ExerciseApplication.class, args);
-		//QuestionnaireService service = ctx.getBean(QuestionnaireService.class);
-		//IOService ioService = ctx.getBean(IOService.class);
-		//service.startQuestionnaire();
+		QuestionnaireService service = ctx.getBean(QuestionnaireService.class);
+		IOService ioService = ctx.getBean(IOService.class);
+		service.startQuestionnaire();
 	}
 
 }
