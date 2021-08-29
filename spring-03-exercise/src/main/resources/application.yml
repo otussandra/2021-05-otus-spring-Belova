@@ -1,0 +1,4 @@
+properties:
+  delimiter: ;
+  questionnaireSours: /Questionnaire.csv
+  passingScore: 3
