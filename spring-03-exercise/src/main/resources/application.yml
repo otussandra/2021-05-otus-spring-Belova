@@ -1,4 +1,4 @@
 properties:
   delimiter: ;
-  questionnaireSours: /Questionnaire.csv
+  questionnaireSource: /Questionnaire.csv
   passingScore: 3
