@@ -1,6 +1,6 @@
 package ru.otus.spring.service;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import ru.otus.spring.api.QuestionnaireLoadingException;
 import ru.otus.spring.api.RespondentIntroduceException;
@@ -20,19 +20,25 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     private final QuestionnaireRespondentIntroduceService questrespintroduceserv;
     private final ExecuteQuestionnaireService execquestionnaireserv;
     private final QuestionnaireResultService questionresultserv;
+    private String locale;
+    private final MessageSource messagesource;
 
     public QuestionnaireServiceImpl(QuestionnaireDao dao, IOService ioService, QuestionnaireConfig config,
                                     QuestionnaireRespondentIntroduceService questrespintroduceserv,
                                     ExecuteQuestionnaireService execquestionnaireserv,
-                                    QuestionnaireResultService questionresultserv) {
+                                    QuestionnaireResultService questionresultserv, MessageSource messagesource) {
         this.dao = dao;
         this.ioService = ioService;
         this.config =  config;
         this.passingScore = config.getPassingScore();
+        this.locale = config.getLocale();
         this.questrespintroduceserv = questrespintroduceserv;
         this.execquestionnaireserv = execquestionnaireserv;
         this.questionresultserv = questionresultserv;
+        this.messagesource = messagesource;
     }
+
+
 
     @Override
     public void startQuestionnaire() {
@@ -41,15 +47,15 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
             int rightAnswerCounter;
             try {
                 Respondent respondent = questrespintroduceserv.questionnaireRespondentIntroduce();
-                rightAnswerCounter = execquestionnaireserv.executeQuestionnaire(questionnaire);
+               rightAnswerCounter = execquestionnaireserv.executeQuestionnaire(questionnaire);
                 questionresultserv.showQuestionnaireResult(passingScore, new QuestionnaireResult(respondent, rightAnswerCounter));
 
             } catch (RespondentIntroduceException e) {
-                ioService.out("You didn't introduce yourself. Please try from the beginning.");
+                ioService.out("strings.introduceError",messagesource,new String[] {""});
                 e.printStackTrace();
             }
         } catch (QuestionnaireLoadingException e) {
-            ioService.out("Have a problem with a questionnaire source may be it's  not found.");
+            ioService.out("string.questionnairesourceError",messagesource,new String[] {""});
             e.printStackTrace();
         }
     }

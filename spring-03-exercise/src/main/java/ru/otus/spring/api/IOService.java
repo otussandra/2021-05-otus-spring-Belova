@@ -1,8 +1,10 @@
 package ru.otus.spring.api;
 
-public interface IOService {
-    void out(String message);
+import org.springframework.context.MessageSource;
 
+public interface IOService {
+    void out(String messagecode, MessageSource messagesource,String[] message);
+    void outString(String message);
     String readString();
 
     int readInteger();

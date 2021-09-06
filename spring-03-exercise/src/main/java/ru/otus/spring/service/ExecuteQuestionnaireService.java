@@ -1,5 +1,6 @@
 package ru.otus.spring.service;
 
+import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import ru.otus.spring.api.IOService;
 import ru.otus.spring.domain.Questionnaire;
@@ -11,19 +12,20 @@ import java.util.List;
 @Service
 public class ExecuteQuestionnaireService {
     private final IOService ioService;
-
-    public ExecuteQuestionnaireService(IOService ioService) {
+    private final MessageSource messagesource;
+    public ExecuteQuestionnaireService(IOService ioService, MessageSource messagesource) {
         this.ioService = ioService;
+        this.messagesource = messagesource;
     }
 
     public int executeQuestionnaire(Questionnaire qest) {
         int rightAnswerCounter;
         if (qest != null) {
-            ioService.out("Start Questionnaire" + "\n");
+            ioService.out("string.startquestionnaire",messagesource,new String[] {""});
             rightAnswerCounter = 0;
             for (int i = 0; i < qest.getQuestions().size(); i++) {
                 QuestionnairePart element = qest.getQuestions().get(i);
-                ioService.out(element.getQuestionText() + "\n");
+                ioService.outString(element.getQuestionText() + "\n");
                 showAnswerList(element);
                 if (element.getRightAnswer().equals(element.getQuestionAnswers().get((respondentAnswerEvaluation(element) - 1)))) {
                     rightAnswerCounter++;
@@ -41,24 +43,25 @@ public class ExecuteQuestionnaireService {
         for (int j = 0; j < answers.size(); j++) {
             answerString.append(j + 1).append(")").append(" ").append(answers.get(j)).append(" ");
         }
-        ioService.out(answerString + "\n");
+        ioService.outString(answerString + "\n");
     }
 
     private int respondentAnswerEvaluation(QuestionnairePart element) {
         int youAnswerNumber = 0;
-        ioService.out("press 1 or 2" + "\n");
+
+        ioService.out("string.asktopress",messagesource,new String[] {""});
         try {
             youAnswerNumber = ioService.readInteger();
             while (youAnswerNumber != 1 && youAnswerNumber != 2) {
-                ioService.out("press 1 or 2" + "\n");
+                ioService.out("string.asktopress",messagesource,new String[] {""});
                 youAnswerNumber = ioService.readInteger();
             }
         } catch (InputMismatchException inputMismatchException) {
-            ioService.out("You need to press 1 or 2" + "\n" + "Start the questionnaire from the beginning");
+            ioService.out("string.asktopressError",messagesource,new String[] {""});
             return 0;
         }
-        ioService.out("your answer is: " + youAnswerNumber + "\n");
-        ioService.out("The right answer is: " + element.getRightAnswer() + "\n");
+        ioService.out("string.youranswer" ,messagesource, new String[] {youAnswerNumber + "\n"});
+        ioService.out("string.rightanswer",messagesource,new String[] {element.getRightAnswer() + "\n"});
         return youAnswerNumber;
     }
 }

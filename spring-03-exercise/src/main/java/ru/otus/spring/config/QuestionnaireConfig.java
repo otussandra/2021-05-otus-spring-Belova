@@ -9,6 +9,7 @@ public class QuestionnaireConfig {
     private  String questionnaireSource;
     private  char delimiter;
     private  int passingScore;
+    private   String locale;
 
     public void setDelimiter(char delimiter) {
         this.delimiter = delimiter;
@@ -22,8 +23,21 @@ public class QuestionnaireConfig {
         this.questionnaireSource = questionnaireSource;
     }
 
+    public void setLocale(String locale) {
+        this.locale = locale;
+    }
+
+    public String getLocale() {
+        String country = System.getProperty("user.country");
+        String language =System.getProperty("user.language");
+        locale = country+"_"+language;
+        return locale;
+    }
+
     public String getQuestionnaireSource() {
-        return questionnaireSource;
+        String loc = this.getLocale();
+        String ss = questionnaireSource.replace("{locale}",loc);
+        return questionnaireSource.replace("{locale}",loc);
     }
 
     public char getDelimiter() {

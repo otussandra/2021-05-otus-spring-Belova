@@ -1,4 +1,7 @@
 properties:
   delimiter: ;
-  questionnaireSource: /Questionnaire.csv
+  questionnaireSource: /Questionnaire_{locale}.csv
   passingScore: 3
+spring:
+  messages:
+    basename: i18n/messages
