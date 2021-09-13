@@ -3,6 +3,8 @@ package ru.otus.spring.config;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+import java.util.Locale;
+
 @ConfigurationProperties(prefix = "properties")
 @Component
 public class QuestionnaireConfig {
@@ -28,16 +30,12 @@ public class QuestionnaireConfig {
     }
 
     public String getLocale() {
-        String country = System.getProperty("user.country");
-        String language =System.getProperty("user.language");
-        locale = country+"_"+language;
         return locale;
     }
 
     public String getQuestionnaireSource() {
-        String loc = this.getLocale();
-        String ss = questionnaireSource.replace("{locale}",loc);
-        return questionnaireSource.replace("{locale}",loc);
+        String loc = Locale.forLanguageTag(locale).getLanguage();
+        return questionnaireSource.replace("{locale}",loc.equals("")?"en":loc);
     }
 
     public char getDelimiter() {

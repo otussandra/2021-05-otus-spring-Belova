@@ -3,6 +3,7 @@ package ru.otus.spring.service;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import ru.otus.spring.api.IOService;
+import ru.otus.spring.api.MessageService;
 import ru.otus.spring.api.RespondentIntroduceException;
 import ru.otus.spring.domain.Respondent;
 
@@ -11,18 +12,18 @@ import java.util.InputMismatchException;
 @Service
 public class QuestionnaireRespondentIntroduceService {
     private final IOService ioService;
-    private final MessageSource messagesource;
+    private final MessageService messageService;
 
-    public QuestionnaireRespondentIntroduceService(IOService ioService, MessageSource messagesource) {
+    public QuestionnaireRespondentIntroduceService(IOService ioService, MessageService messageService) {
         this.ioService = ioService;
-        this.messagesource = messagesource;
+        this.messageService = messageService;
     }
 
     public Respondent questionnaireRespondentIntroduce() throws RespondentIntroduceException {
         try {
-            ioService.out("strings.Lastname",messagesource,new String[] {""});
+            ioService.out(messageService.getMessage("strings.Lastname",new String[] {""}));
             String lastName = ioService.readString();
-            ioService.out("strings.Firstname",messagesource,new String[] {""});
+            ioService.out(messageService.getMessage("strings.Firstname",new String[] {""}));
             String firstName = ioService.readString();
             if (lastName.length() > 0 && firstName.length() > 0) {
                 return new Respondent(lastName, firstName);

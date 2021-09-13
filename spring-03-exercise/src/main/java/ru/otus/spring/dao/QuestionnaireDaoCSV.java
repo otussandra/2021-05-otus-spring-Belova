@@ -14,21 +14,17 @@ import java.util.List;
 
 @Repository
 public class QuestionnaireDaoCSV implements QuestionnaireDao {
-    private final String questionnaireSource;
-    private final char delimiter;
     private final QuestionnaireConfig config;
 
     public QuestionnaireDaoCSV(QuestionnaireConfig config) {
         this.config = config;
-        this.questionnaireSource = config.getQuestionnaireSource();
-        this.delimiter = config.getDelimiter();
     }
 
 
     @Override
     public Questionnaire loadQuestionnaire() throws QuestionnaireLoadingException {
         List<QuestionnairePart> questionnaire = new ArrayList<>();
-        try (InputStream is = QuestionnaireDaoCSV.class.getResourceAsStream(questionnaireSource);
+        try (InputStream is = QuestionnaireDaoCSV.class.getResourceAsStream(config.getQuestionnaireSource());
              BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));) {
             while (true) {
                 String line = null;
@@ -40,7 +36,7 @@ public class QuestionnaireDaoCSV implements QuestionnaireDao {
                     break;
             }
         } catch (IOException e) {
-            throw new QuestionnaireLoadingException("Questionnaire sours " + questionnaireSource + " not found.", e);
+            throw new QuestionnaireLoadingException("Questionnaire sours " + config.getQuestionnaireSource() + " not found.", e);
         }
         return new Questionnaire(questionnaire);
     }
@@ -49,14 +45,14 @@ public class QuestionnaireDaoCSV implements QuestionnaireDao {
         String question = null;
         String rightAnswer = null;
         List<String> answers = null;
-        if (findByKeyInString("Answer", soursLine, delimiter).size() > 0) {
-            answers = findByKeyInString("Answer", soursLine, delimiter);
+        if (findByKeyInString("Answer", soursLine, config.getDelimiter()).size() > 0) {
+            answers = findByKeyInString("Answer", soursLine, config.getDelimiter());
         }
-        if (findByKeyInString("Question", soursLine, delimiter).size() > 0) {
-            question = findByKeyInString("Question", soursLine, delimiter).get(0);
+        if (findByKeyInString("Question", soursLine, config.getDelimiter()).size() > 0) {
+            question = findByKeyInString("Question", soursLine, config.getDelimiter()).get(0);
         }
-        if (findByKeyInString("RightAnswer", soursLine, delimiter).size() > 0) {
-            rightAnswer = findByKeyInString("RightAnswer", soursLine, delimiter).get(0);
+        if (findByKeyInString("RightAnswer", soursLine, config.getDelimiter()).size() > 0) {
+            rightAnswer = findByKeyInString("RightAnswer", soursLine, config.getDelimiter()).get(0);
         }
 
         return new QuestionnairePart(question, answers, rightAnswer);
