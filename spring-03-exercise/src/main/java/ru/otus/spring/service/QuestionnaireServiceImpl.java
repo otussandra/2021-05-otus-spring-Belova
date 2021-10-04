@@ -17,21 +17,21 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
     private final QuestionnaireDao dao;
     private final IOService ioService;
     private final QuestionnaireConfig config;
-    private final QuestionnaireRespondentIntroduceService questrespintroduceserv;
-    private final ExecuteQuestionnaireService execquestionnaireserv;
-    private final QuestionnaireResultService questionresultserv;
+    private final QuestionnaireRespondentIntroduceService questRespIntroduceServ;
+    private final ExecuteQuestionnaireService execQuestionnaireServ;
+    private final QuestionnaireResultService questionResultServ;
     private final MessageService messageService;
 
     public QuestionnaireServiceImpl(QuestionnaireDao dao, IOService ioService, QuestionnaireConfig config,
-                                    QuestionnaireRespondentIntroduceService questrespintroduceserv,
-                                    ExecuteQuestionnaireService execquestionnaireserv,
-                                    QuestionnaireResultService questionresultserv, MessageService messageService) {
+                                    QuestionnaireRespondentIntroduceService questRespIntroduceServ,
+                                    ExecuteQuestionnaireService execQuestionnaireServ,
+                                    QuestionnaireResultService questionResultServ, MessageService messageService) {
         this.dao = dao;
         this.ioService = ioService;
         this.config =  config;
-        this.questrespintroduceserv = questrespintroduceserv;
-        this.execquestionnaireserv = execquestionnaireserv;
-        this.questionresultserv = questionresultserv;
+        this.questRespIntroduceServ = questRespIntroduceServ;
+        this.execQuestionnaireServ = execQuestionnaireServ;
+        this.questionResultServ = questionResultServ;
         this.messageService = messageService;
     }
 
@@ -43,16 +43,16 @@ public class QuestionnaireServiceImpl implements QuestionnaireService {
             Questionnaire questionnaire = dao.loadQuestionnaire();
             int rightAnswerCounter;
             try {
-                Respondent respondent = questrespintroduceserv.questionnaireRespondentIntroduce();
-               rightAnswerCounter = execquestionnaireserv.executeQuestionnaire(questionnaire);
-                questionresultserv.showQuestionnaireResult(config.getPassingScore(), new QuestionnaireResult(respondent, rightAnswerCounter));
+                Respondent respondent = questRespIntroduceServ.questionnaireRespondentIntroduce();
+               rightAnswerCounter = execQuestionnaireServ.executeQuestionnaire(questionnaire);
+                questionResultServ.showQuestionnaireResult(config.getPassingScore(), new QuestionnaireResult(respondent, rightAnswerCounter));
 
             } catch (RespondentIntroduceException e) {
-                ioService.out(messageService.getMessage("strings.introduceError",new String[] {""}));
+                ioService.out(messageService.getMessage("strings.introduceError",""));
                 e.printStackTrace();
             }
         } catch (QuestionnaireLoadingException e) {
-            ioService.out(messageService.getMessage("string.questionnairesourceError",new String[] {""}));
+            ioService.out(messageService.getMessage("string.questionnairesourceError",""));
             e.printStackTrace();
         }
     }

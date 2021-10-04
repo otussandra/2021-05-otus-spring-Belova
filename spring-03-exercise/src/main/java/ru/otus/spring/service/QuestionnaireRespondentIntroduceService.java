@@ -21,9 +21,9 @@ public class QuestionnaireRespondentIntroduceService {
 
     public Respondent questionnaireRespondentIntroduce() throws RespondentIntroduceException {
         try {
-            ioService.out(messageService.getMessage("strings.Lastname",new String[] {""}));
+            ioService.out(messageService.getMessage("strings.Lastname",""));
             String lastName = ioService.readString();
-            ioService.out(messageService.getMessage("strings.Firstname",new String[] {""}));
+            ioService.out(messageService.getMessage("strings.Firstname",""));
             String firstName = ioService.readString();
             if (lastName.length() > 0 && firstName.length() > 0) {
                 return new Respondent(lastName, firstName);

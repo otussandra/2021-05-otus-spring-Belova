@@ -11,11 +11,12 @@ public class MessageService {
     private final Locale locale;
     private final MessageSource msg;
     public MessageService(MessageSource msg,  QuestionnaireConfig config){
-        this.locale = Locale.forLanguageTag(config.getLocale());
+        this.locale = config.getLocale();
         this.msg    =   msg;
 
     }
-    public String getMessage(String msgCode,  String[] message){
-        return msg.getMessage(msgCode, message, locale);
+    public String getMessage(String msgCode, String... args){
+
+        return msg.getMessage(msgCode, args, locale);
     }
 }

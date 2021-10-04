@@ -24,7 +24,7 @@ public class QuestionnaireResultService {
         if (questionnaireResult.getNumberOfRightAnswer() >= passingScore) {
             result = "string.goodresult";
         }
-        this.ioService.out(messageService.getMessage("string.result",new String[] {""}));
-        this.ioService.out(messageService.getMessage(result,new String[] {String.valueOf(questionnaireResult.getNumberOfRightAnswer()), String.valueOf(passingScore),questionnaireResult.getRespondentToString()}));
+        this.ioService.out(messageService.getMessage("string.result",""));
+        this.ioService.out(messageService.getMessage(result,String.valueOf(questionnaireResult.getNumberOfRightAnswer()), String.valueOf(passingScore),questionnaireResult.getRespondentToString()));
     }
 }

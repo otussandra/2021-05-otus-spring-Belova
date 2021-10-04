@@ -22,7 +22,7 @@ public class ExecuteQuestionnaireService {
     public int executeQuestionnaire(Questionnaire qest) {
         int rightAnswerCounter;
         if (qest != null) {
-            ioService.out(messageService.getMessage("string.startquestionnaire",new String[] {""}) );
+            ioService.out(messageService.getMessage("string.startquestionnaire","") );
             rightAnswerCounter = 0;
             for (int i = 0; i < qest.getQuestions().size(); i++) {
                 QuestionnairePart element = qest.getQuestions().get(i);
@@ -50,19 +50,19 @@ public class ExecuteQuestionnaireService {
     private int respondentAnswerEvaluation(QuestionnairePart element) {
         int youAnswerNumber = 0;
 
-        ioService.out(messageService.getMessage("string.asktopress",new String[] {""}));
+        ioService.out(messageService.getMessage("string.asktopress",""));
         try {
             youAnswerNumber = ioService.readInteger();
             while (youAnswerNumber != 1 && youAnswerNumber != 2) {
-                ioService.out(messageService.getMessage("string.asktopress",new String[] {""}));
+                ioService.out(messageService.getMessage("string.asktopress",""));
                 youAnswerNumber = ioService.readInteger();
             }
         } catch (InputMismatchException inputMismatchException) {
-            ioService.out(messageService.getMessage("string.asktopressError",new String[] {""}));
+            ioService.out(messageService.getMessage("string.asktopressError",""));
             return 0;
         }
-        ioService.out(messageService.getMessage("string.youranswer" , new String[] {youAnswerNumber + "\n"}));
-        ioService.out(messageService.getMessage("string.rightanswer",new String[] {element.getRightAnswer() + "\n"}));
+        ioService.out(messageService.getMessage("string.youranswer" , youAnswerNumber+ "\n"));
+        ioService.out(messageService.getMessage("string.rightanswer",element.getRightAnswer() + "\n"));
         return youAnswerNumber;
     }
 }

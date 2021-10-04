@@ -2,7 +2,7 @@ properties:
   delimiter: ;
   questionnaireSource: /Questionnaire_{locale}.csv
   passingScore: 3
-  locale: ru
+  locale: en
 spring:
   messages:
     basename: i18n/messages

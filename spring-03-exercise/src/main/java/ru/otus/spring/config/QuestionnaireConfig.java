@@ -29,8 +29,8 @@ public class QuestionnaireConfig {
         this.locale = locale;
     }
 
-    public String getLocale() {
-        return locale;
+    public Locale getLocale() {
+        return Locale.forLanguageTag(locale);
     }
 
     public String getQuestionnaireSource() {
