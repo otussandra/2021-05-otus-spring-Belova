@@ -3,6 +3,7 @@ package ru.otus.spring.service;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import ru.otus.spring.api.IOService;
+import ru.otus.spring.api.LocalizedIOService;
 import ru.otus.spring.api.MessageService;
 import ru.otus.spring.domain.Questionnaire;
 import ru.otus.spring.domain.QuestionnairePart;
@@ -13,16 +14,16 @@ import java.util.List;
 @Service
 public class ExecuteQuestionnaireService {
     private final IOService ioService;
-    private final MessageService messageService;
-    public ExecuteQuestionnaireService(IOService ioService, MessageService messageService) {
+    private final LocalizedIOService localizedIOService;
+    public ExecuteQuestionnaireService(IOService ioService, LocalizedIOService localizedIOService) {
         this.ioService = ioService;
-        this.messageService = messageService;
+        this.localizedIOService = localizedIOService;
     }
 
     public int executeQuestionnaire(Questionnaire qest) {
         int rightAnswerCounter;
         if (qest != null) {
-            ioService.out(messageService.getMessage("string.startquestionnaire","") );
+            localizedIOService.printMessage("string.startquestionnaire","");
             rightAnswerCounter = 0;
             for (int i = 0; i < qest.getQuestions().size(); i++) {
                 QuestionnairePart element = qest.getQuestions().get(i);
@@ -50,19 +51,19 @@ public class ExecuteQuestionnaireService {
     private int respondentAnswerEvaluation(QuestionnairePart element) {
         int youAnswerNumber = 0;
 
-        ioService.out(messageService.getMessage("string.asktopress",""));
+        localizedIOService.printMessage("string.asktopress","");
         try {
             youAnswerNumber = ioService.readInteger();
             while (youAnswerNumber != 1 && youAnswerNumber != 2) {
-                ioService.out(messageService.getMessage("string.asktopress",""));
+                localizedIOService.printMessage("string.asktopress","");
                 youAnswerNumber = ioService.readInteger();
             }
         } catch (InputMismatchException inputMismatchException) {
-            ioService.out(messageService.getMessage("string.asktopressError",""));
+            localizedIOService.printMessage("string.asktopressError","");
             return 0;
         }
-        ioService.out(messageService.getMessage("string.youranswer" , youAnswerNumber+ "\n"));
-        ioService.out(messageService.getMessage("string.rightanswer",element.getRightAnswer() + "\n"));
+        localizedIOService.printMessage("string.youranswer" , youAnswerNumber+ "\n");
+        localizedIOService.printMessage("string.rightanswer",element.getRightAnswer() + "\n");
         return youAnswerNumber;
     }
 }
