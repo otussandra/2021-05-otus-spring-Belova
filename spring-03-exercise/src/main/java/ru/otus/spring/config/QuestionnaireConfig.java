@@ -7,7 +7,7 @@ import java.util.Locale;
 
 @ConfigurationProperties(prefix = "properties")
 @Component
-public class QuestionnaireConfig {
+public class QuestionnaireConfig  implements QuestionnaireLocaleConfig,QuestionnaireParamConfig,QuestionnaireResultConfig{
     private  String questionnaireSource;
     private  char delimiter;
     private  int passingScore;

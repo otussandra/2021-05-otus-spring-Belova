@@ -8,7 +8,6 @@ import ru.otus.spring.domain.Respondent;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
 public class QuestionnaireResultTest {
     @Test
     @DisplayName("QuestionnaireResult корректно создается")

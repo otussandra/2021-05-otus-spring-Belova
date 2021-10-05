@@ -1,9 +1,8 @@
 package ru.otus.spring.dao;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import ru.otus.spring.api.QuestionnaireLoadingException;
-import ru.otus.spring.config.QuestionnaireConfig;
+import ru.otus.spring.config.QuestionnaireParamConfig;
 import ru.otus.spring.domain.Questionnaire;
 import ru.otus.spring.domain.QuestionnairePart;
 
@@ -14,9 +13,9 @@ import java.util.List;
 
 @Repository
 public class QuestionnaireDaoCSV implements QuestionnaireDao {
-    private final QuestionnaireConfig config;
+    private final QuestionnaireParamConfig config;
 
-    public QuestionnaireDaoCSV(QuestionnaireConfig config) {
+    public QuestionnaireDaoCSV(QuestionnaireParamConfig config) {
         this.config = config;
     }
 
